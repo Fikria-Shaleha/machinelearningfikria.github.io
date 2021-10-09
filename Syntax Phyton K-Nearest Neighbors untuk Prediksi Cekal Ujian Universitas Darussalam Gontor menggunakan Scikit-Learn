@@ -1,0 +1,39 @@
+import pandas as pd
+import numpy as np
+from matplotlib import pyplot as plt
+from sklearn import datasets
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.metrics import accuracy_score
+from sklearn.metrics import classification_report
+
+#Ambil data dari file CSV
+datamahasiswa=pd.read_csv('UAS Cekal detecting.csv')
+DF=pd.DataFrame(datamahasiswa,columns=['Absen Mahasiswi','Nilai Ujian SIF','AKPAM','Tercekal Ujian'])
+X=np.asarray(datamahasiswa)
+x_train=X[:,1:3]
+y_train=X[:,3:4] 
+
+#memanggil UAS
+UAS=KNeighborsClassifier(n_neighbors=6,
+                         weights='uniform',
+                         algorithm='auto',
+                         metric='euclidean')
+#Fit model dengan data latih dan target/label
+UAS.fit(x_train,y_train)
+
+#Mengambil data dari file csv
+datavalidasi=pd.read_csv('Validasi UAS Cekal detecting.csv')
+df2=pd.DataFrame(datamahasiswa,columns=['Absen Mahasiswi','Nilai Ujian SIF','AKPAM','Tercekal Ujian'])
+X2=np.asarray(datavalidasi)
+x_val=X2[:,1:3]
+y_val=X2[:,3:4]
+#Prediksi
+y_pred=UAS.predict(x_val)
+print((y_val).T)
+print(y_pred)
+print(classification_report(y_val,y_pred))
+
+uji=np.asarray([[100,199]])
+
+y_pred=UAS.predict(uji)
+print(y_pred)
